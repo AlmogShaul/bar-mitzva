@@ -27,7 +27,7 @@ def get_stt():
     if stt is None:
         from speech_to_text import SpeechToText
         print("Loading Whisper model...")
-        stt = SpeechToText(model_name="small")
+        stt = SpeechToText()
         print("Whisper model loaded!")
     return stt
 
@@ -124,7 +124,7 @@ def compare_audio():
         if not pasuk_id:
             return jsonify({"error": "Pasuk ID required"}), 400
 
-        rabbi_file = 'b1.mp3'
+        rabbi_file = 'old/b1.mp3'
         rabbi_file = os.path.join('audio', f'{pasuk_id}.m4a')
         if not os.path.exists(user_file):
             return jsonify({"error": "User recording not found"}), 404

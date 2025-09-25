@@ -48,10 +48,7 @@ RUN if [ -d "./static/static" ]; then \
     fi
 
 # Ensure the audio files are included in the build
-COPY client/public/audio ./static/audio/
-
-# Copy the audio folder to the target destination
-COPY ../bar-mitzva-1/audio/ ./audio/
+COPY audio/ ./audio/
 
 # Expose port
 EXPOSE 8080

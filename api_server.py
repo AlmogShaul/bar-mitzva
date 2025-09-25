@@ -31,7 +31,7 @@ def get_stt():
     if stt is None:
         from speech_to_text import SpeechToText
         print("Loading Whisper model...")
-        stt = SpeechToText(model_name="small")
+        stt = SpeechToText()
         print("Whisper model loaded!")
     return stt
 
@@ -55,7 +55,7 @@ def get_rabbi_audio():
     logging.debug("Rabbi audio endpoint called")
     """Serve the rabbi's reference audio file"""
     try:
-        return send_file('b1.mp3', as_attachment=False, mimetype='audio/mpeg')
+        return send_file('old/b1.mp3', as_attachment=False, mimetype='audio/mpeg')
     except FileNotFoundError:
         logging.error("Rabbi audio file not found")
         return jsonify({"error": "Rabbi audio file not found"}), 404
