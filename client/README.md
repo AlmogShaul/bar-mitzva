@@ -44,3 +44,12 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## to run the Docker locally:
+
+
+docker build -t bar-mitzva-server .
+docker run -d --name bar-mitzva-server -p 8080:8080 bar-mitzva-server
+
+
