@@ -37,7 +37,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy Python source code
 COPY *.py ./
-COPY *.mp3 ./
 
 # Copy built React frontend from previous stage with proper structure
 COPY --from=frontend-builder /app/client/build ./static/

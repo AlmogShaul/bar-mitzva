@@ -223,8 +223,43 @@ def get_pasuk_info():
     }
     return jsonify(pasuk_info)
 
+
+@app.route('/api/ok', methods=['GET'])
+def get_OK():
+    return jsonify("OK")
+
+
+@app.route('/api/audio/<int:chapter>_<int:pasuk>', methods=['GET'])
+def get_audio_file(chapter, pasuk):
+    """Serve the audio file for the given chapter and pasuk."""
+    logging.debug(f"Audio file request for chapter {chapter}, pasuk {pasuk}")
+    print(f"Audio file request for chapter {chapter}, pasuk {pasuk}", flush=True)
+
+    # Ensure the audio folder path is correct
+    audio_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), 'audio'))
+    logging.debug(f"Resolved audio folder path: {audio_folder}")
+    print(f"Resolved audio folder path: {audio_folder}", flush=True)
+
+    filename = f"{chapter}_{pasuk}.m4a"
+    filepath = os.path.join(audio_folder, filename)
+
+    logging.debug(f"Looking for audio file at: {filepath}")
+    print(f"Looking for audio file at: {filepath}", flush=True)
+
+    if os.path.exists(filepath):
+        logging.info(f"Serving audio file: {filepath}")
+        print(f"Serving audio file: {filepath}", flush=True)
+        return send_file(filepath, as_attachment=False, mimetype='audio/mpeg')
+    else:
+        logging.warning(f"Audio file not found: {filepath}")
+        print(f"Audio file not found: {filepath}", flush=True)
+        return jsonify({"error": "Audio file not found"}), 404
+
+
+
 if __name__ == '__main__':
     print(f"Temporary files will be stored in: {temp_dir}")
     print("Starting Bar Mitzvah API server...")
     print("Note: AI models will be loaded on first use to speed up startup")
     app.run(debug=True, host='0.0.0.0', port=5001)
+

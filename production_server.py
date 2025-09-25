@@ -191,6 +191,32 @@ def get_comparison_plot(session_id):
     except Exception as e:
         return jsonify({"error": f"Failed to serve plot: {str(e)}"}), 500
 
+
+
+@app.route('/api/audio/<int:chapter>_<int:pasuk>', methods=['GET'])
+def get_audio_file(chapter, pasuk):
+    """Serve the audio file for the given chapter and pasuk."""
+    print(f"Audio file request for chapter {chapter}, pasuk {pasuk}", flush=True)
+
+    # Ensure the audio folder path is correct
+    audio_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), 'audio'))
+    print(f"Resolved audio folder path: {audio_folder}", flush=True)
+
+    filename = f"{chapter}_{pasuk}.m4a"
+    filepath = os.path.join(audio_folder, filename)
+
+    print(f"Looking for audio file at: {filepath}", flush=True)
+
+    if os.path.exists(filepath):
+        print(f"Serving audio file: {filepath}", flush=True)
+        return send_file(filepath, as_attachment=False, mimetype='audio/mpeg')
+    else:
+        print(f"Audio file not found: {filepath}", flush=True)
+        return jsonify({"error": "Audio file not found"}), 404
+
+
+
+
 @app.route('/api/pasuk-info')
 def get_pasuk_info():
     pasuk_info = {

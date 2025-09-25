@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { Pasuk } from '../data/psukim';
+import React, { useState, useRef, useEffect } from 'react';
+import tora from '../data/torah.json';
 import './VerseCard.css';
+import {Pasuk} from "../data/psukim";
 
 interface VerseCardProps {
   pasuk?: Pasuk;
@@ -35,8 +36,26 @@ export const VerseCard: React.FC<VerseCardProps> = ({ pasuk }) => {
 
   if(!pasuk) return null;
 
+  useEffect(() => {
+    if (pasuk) {
+      // fetchAudioAvailability(pasuk.chapter, pasuk.pasuk);
+    }
+  }, [pasuk]);
+
+  const fetchAudioAvailability = async (chapter: number, pasuk: number) => {
+    try {
+      const response = await fetch(`/api/audio/${chapter}_${pasuk}`, { method: 'HEAD' });
+      if (!response.ok) {
+        throw new Error('Audio file not found');
+      }
+    } catch (err) {
+      console.error('Error checking audio file:', err);
+      setError('Audio file not available');
+    }
+  };
+
   const handlePlay = async () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !pasuk) return;
 
     try {
       setIsLoading(true);
@@ -46,15 +65,13 @@ export const VerseCard: React.FC<VerseCardProps> = ({ pasuk }) => {
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
-        // Dynamically set the audio source based on pasuk.id
-        audioRef.current.src = `/audio/${pasuk.id}.m4a`;
-        audioRef.current.load(); // Force reload the audio
-
+        audioRef.current.src = `/api/audio/${pasuk.chapter}_${pasuk.pasuk}`;
+        audioRef.current.load();
         await audioRef.current.play();
         setIsPlaying(true);
       }
     } catch (err) {
-      setError('שגיאה בהשמעת הקובץ / Audio playback failed');
+      setError('Audio playback failed');
       console.error('Audio playback error:', err);
       setIsPlaying(false);
     } finally {
@@ -176,14 +193,14 @@ export const VerseCard: React.FC<VerseCardProps> = ({ pasuk }) => {
     if (score >= 60) return 'טוב, המשך לתרגל / Good, keep practicing';
     return 'צריך עוד תרגול / Needs more practice';
   };
-  const hasAudio = !!pasuk.audioUrl; // Check if audioUrl exists for the pasuk
+
   const canRecord = true; // Enable recording for all psukim
 
   return (
     <div className="verse-card">
       <div className="verse-header">
         <span className="book-reference">
-          {pasuk.book} {pasuk.chapter}:{pasuk.verse}
+          {pasuk.book} {pasuk.chapter}:{pasuk.pasuk}
         </span>
       </div>
 
@@ -205,23 +222,21 @@ export const VerseCard: React.FC<VerseCardProps> = ({ pasuk }) => {
           <h3>תרגול קריאה / Reading Practice</h3>
           <div className="recording-controls">
             {/* Play button moved here */}
-            {hasAudio && (
-              <button
+            <button
                 className={`control-button play ${isPlaying ? 'playing' : ''} ${isLoading ? 'loading' : ''}`}
                 onClick={handlePlay}
                 disabled={isLoading}
                 title={isPlaying ? 'עצור השמעה' : 'השמע פסוק'}
                 style={{ marginRight: '8px' }}
-              >
-                {isLoading ? (
+            >
+              {isLoading ? (
                   <span className="spinner">⟳</span>
-                ) : isPlaying ? (
+              ) : isPlaying ? (
                   '⏸️'
-                ) : (
+              ) : (
                   '▶️ Play origin'
-                )}
-              </button>
-            )}
+              )}
+            </button>
             <button
               className={`control-button record ${isRecording ? 'recording' : ''}`}
               onClick={isRecording ? stopRecording : startRecording}
@@ -304,7 +319,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ pasuk }) => {
         </div>
       )}
 
-      {hasAudio && (
+
         <audio
           ref={audioRef}
           onEnded={handleAudioEnd}
@@ -313,7 +328,7 @@ export const VerseCard: React.FC<VerseCardProps> = ({ pasuk }) => {
           crossOrigin="anonymous"
           preload="none"
         />
-      )}
+
     </div>
   );
 };

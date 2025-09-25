@@ -1,13 +1,13 @@
 import React from 'react';
 import { VerseCard } from './components/VerseCard';
-import { psukim } from './data/psukim';
+import  tora  from './data/torah.json';
 import './App.css';
 import BarMitzvahParashaPage from "./components/BarMitzvahStart";
 import parashaMap from "./parasha_map.json";
-//aaaas
+
 function App() {
     const [selectedParasha, setSelectedParasha] = React.useState<any>(
-        localStorage.getItem("selectedParasha") || null
+        JSON.parse(localStorage.getItem("selectedParasha") || "null")
     );
 
     const onParashaSelected = (data: any) => {
@@ -19,10 +19,8 @@ function App() {
             const parasha = parashaMap.find(
                 (a) => a.english.toLowerCase() === data.parshiot[0].split(" ")[1].toLowerCase()
             );
-
-            const selected = parasha?.hebrew || data.parshiot[0];
-            setSelectedParasha(selected);
-            localStorage.setItem("selectedParasha", selected);
+            setSelectedParasha(parasha);
+            localStorage.setItem("selectedParasha", JSON.stringify(parasha));
         }
     }
   return (
@@ -31,10 +29,10 @@ function App() {
                 <header className="app-header">
                     <h1>פרויקט בר מצווה</h1>
                     <h4>Bar Mitzvah Torah Reading Practice</h4>
-                    <h2>Your Parasha - <b> {selectedParasha}</b></h2>
+                    <h2>Your Parasha - <b> {selectedParasha.hebrew}</b></h2>
                 </header>
                 <main className="verses-container">
-                    {psukim.map((pasuk) => (
+                    {tora.filter(a=>a.parasha.toLowerCase().replace("'","") === selectedParasha.english.toLowerCase().replace("'","")).map((pasuk) => (
                         <VerseCard key={pasuk.id} pasuk={pasuk} />
                     ))}
                 </main>
