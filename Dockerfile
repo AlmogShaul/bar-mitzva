@@ -39,7 +39,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY *.py ./
 
 # Copy built React frontend from previous stage with proper structure
-COPY --from=frontend-builder /app/client/build ./static/
+COPY --from=frontend-builder /app/client/build /app/static
 # Move the nested static files to the root static directory for proper serving
 RUN if [ -d "./static/static" ]; then \
     cp -r ./static/static/* ./static/ && \
@@ -55,6 +55,6 @@ EXPOSE 8080
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8080/health || exit 1
-
+\
 # Start the production server
 CMD ["python", "production_server.py"]

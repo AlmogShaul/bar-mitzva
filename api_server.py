@@ -255,6 +255,33 @@ def get_audio_file(chapter, pasuk):
         print(f"Audio file not found: {filepath}", flush=True)
         return jsonify({"error": "Audio file not found"}), 404
 
+@app.route('/api/audio/group', methods=['POST'])
+def get_group_audio():
+    """Serve concatenated audio for a group of psukim."""
+    data = request.get_json()
+    psukim = data.get('psukim', [])  # List of {chapter, pasuk}
+
+    audio_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), 'audio'))
+    audio_files = []
+
+    for pasuk in psukim:
+        chapter = pasuk.get('chapter')
+        pasuk_num = pasuk.get('pasuk')
+        filename = f"{chapter}_{pasuk_num}.m4a"
+        filepath = os.path.join(audio_folder, filename)
+        if os.path.exists(filepath):
+            audio_files.append(filepath)
+        else:
+            return jsonify({"error": f"Audio file not found for chapter {chapter}, pasuk {pasuk_num}"}), 404
+
+    # Concatenate audio files (placeholder logic, actual implementation may vary)
+    concatenated_audio_path = os.path.join(audio_folder, 'group_audio.m4a')
+    with open(concatenated_audio_path, 'wb') as outfile:
+        for audio_file in audio_files:
+            with open(audio_file, 'rb') as infile:
+                outfile.write(infile.read())
+
+    return send_file(concatenated_audio_path, as_attachment=False, mimetype='audio/mpeg')
 
 
 if __name__ == '__main__':

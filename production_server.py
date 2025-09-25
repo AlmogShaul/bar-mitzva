@@ -48,8 +48,8 @@ def serve_react_app():
 # Serve React static files (JS, CSS, images) - Fixed routing
 @app.route('/static/<path:filename>')
 def serve_react_static(filename):
-    # The React build creates files in static/static/, so we need to serve from there
-    return send_from_directory('static/static', filename)
+    # Serve directly from the static directory
+    return send_from_directory('static', filename)
 
 # Serve React public files (manifest, favicon, etc.)
 @app.route('/<path:filename>')

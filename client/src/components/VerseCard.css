@@ -1,8 +1,8 @@
 .verse-card {
   background: white;
   border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-bottom: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
   transition: box-shadow 0.2s ease;
