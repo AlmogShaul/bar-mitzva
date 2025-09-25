@@ -1,0 +1,1 @@
+{"root":["./src/app.test.tsx","./src/app.tsx","./src/index.tsx","./src/react-app-env.d.ts","./src/reportwebvitals.ts","./src/setuptests.ts","./src/components/barmitzvahstart.tsx","./src/components/versecard.tsx","./src/data/psukim.ts","./src/typings/hebcal.d.ts"],"errors":true,"version":"5.9.2"}

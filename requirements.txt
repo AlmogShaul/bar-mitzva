@@ -1,0 +1,8 @@
+openai-whisper
+epitran
+librosa
+numpy
+matplotlib
+rapidfuzz
+flask
+flask-cors
