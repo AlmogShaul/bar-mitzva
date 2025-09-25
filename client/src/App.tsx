@@ -32,7 +32,7 @@ function App() {
                     <h2>Your Parasha - <b> {selectedParasha.hebrew}</b></h2>
                 </header>
                 <main className="verses-container">
-                    {tora.filter(a=>a.parasha.toLowerCase().replace("'","") === selectedParasha.english.toLowerCase().replace("'","")).map((pasuk) => (
+                    {tora?.filter(a=>a.parasha.toLowerCase().replace("'","") === selectedParasha.english.toLowerCase().replace("'","")).map((pasuk) => (
                         <VerseCard key={pasuk.id} pasuk={pasuk} />
                     ))}
                 </main>
